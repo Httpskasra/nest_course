@@ -11,7 +11,7 @@ export interface JWTPayload{
 
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy,'jwt') {
   constructor() {
 
     const secret=process.env.JWT_SECRET

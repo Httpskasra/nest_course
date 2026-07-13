@@ -1,9 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 
 import { LoginDto } from './dto/Login.dto';
 import { RegisterDto } from './dto/Register.dto';
+import { JwtAthGurd } from './gurds/jwt-auth.gurd';
 
 @Controller('auth')
 export class AuthController {
@@ -13,6 +14,7 @@ export class AuthController {
   register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
   }
+
 
   @Post('login')
   login(@Body() dto: LoginDto) {
