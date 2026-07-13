@@ -7,9 +7,15 @@ import { RegisterDto } from './dto/Register.dto';
 import { LoginDto } from './dto/Login.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { JWTPayload } from './decorators/current-user.decorator';
+import { JwtService } from '@nestjs/jwt';
+
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
   async register(dto: RegisterDto) {
     const existUser = await this.prisma.user.findUnique({
       where: { email: dto.email },
@@ -41,6 +47,12 @@ export class AuthService {
     if (!isValid) {
       throw new UnauthorizedException('رمز نامعتبر');
     }
-    return true;
+    const payload: JWTPayload = {
+      sub: user.id,
+      email: user.email,
+    };
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
+    };
   }
 }

@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import type { UUID } from 'crypto';
+import { JwtAthGurd } from 'src/auth/gurds/jwt-auth.gurd';
 
 @Controller('users')
 export class UsersController {
@@ -13,10 +14,12 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(JwtAthGurd)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
+
 
   @Get(':id')
   findOne(@Param('id') id: UUID) {

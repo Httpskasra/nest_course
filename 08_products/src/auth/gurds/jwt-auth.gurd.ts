@@ -25,7 +25,6 @@ export class JwtAthGurd extends AuthGuard('jwt') {
       throw new UnauthorizedException('اهراز هویت لازم است');
     }
 
-    return user
+    return user;
   }
 }
-
