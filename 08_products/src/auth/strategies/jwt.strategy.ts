@@ -3,11 +3,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { JWTPayload } from '../decorators/current-user.decorator';
 
-export interface JWTPayload{
-    sub:string,
-    email:string,
-}
 
 
 @Injectable()
