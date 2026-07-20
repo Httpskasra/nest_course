@@ -20,7 +20,9 @@ export class UsersService {
     if (existUser) {
       throw new ConflictException('این ایمیل وجود دارد');
     }
-    return await this.prisma.user.create({ data: createUserDto });
+    return await this.prisma.user.create({
+      data: { ...createUserDto, role: 'CUSTOMER' },
+    });
   }
 
   async findAll() {
@@ -52,7 +54,7 @@ export class UsersService {
 
   update(id: UUID, updateUserDto: UpdateUserDto) {
     return this.prisma.user.update({
-      where: {id},
+      where: { id },
       data: updateUserDto,
     });
   }

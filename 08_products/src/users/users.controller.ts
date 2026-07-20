@@ -1,10 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import type { UUID } from 'crypto';
-import { JwtAthGurd } from 'src/auth/gurds/jwt-auth.gurd';
-
+import { JwtAthGurd } from 'src/auth/gurds/jwt-auth.guard';
+import { Roles } from 'src/auth/decorators/role.decorator';
+import { RoleGuard } from 'src/auth/gurds/role.guard';
+@Roles()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -13,13 +24,13 @@ export class UsersController {
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-
-  @UseGuards(JwtAthGurd)
+  @Roles('ADMIN')
+  @UseGuards(JwtAthGurd, RoleGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();
+    // return id
   }
-
 
   @Get(':id')
   findOne(@Param('id') id: UUID) {
@@ -30,6 +41,8 @@ export class UsersController {
   update(@Param('id') id: UUID, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
+
+
 
   @Delete(':id')
   remove(@Param('id') id: UUID) {
