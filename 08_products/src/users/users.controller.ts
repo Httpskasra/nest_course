@@ -24,12 +24,11 @@ export class UsersController {
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-  @Roles('ADMIN')
+  @Roles("ADMIN")
   @UseGuards(JwtAthGurd, RoleGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();
-    // return id
   }
 
   @Get(':id')

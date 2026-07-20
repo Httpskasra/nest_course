@@ -1,15 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { JwtAthGurd } from 'src/auth/gurds/jwt-auth.guard';
 
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @UseGuards(JwtAthGurd)
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  create(
+    @Body() createOrderDto: CreateOrderDto,
+    @CurrentUser('sub') userId: string,
+  ) {
+    return this.orderService.create(createOrderDto, userId);
   }
 
   @Get()
@@ -23,8 +38,8 @@ export class OrderController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
+  update(@Param('id') id: string) {
+    return this.orderService.update(+id);
   }
 
   @Delete(':id')
